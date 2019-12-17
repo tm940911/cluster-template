@@ -10,4 +10,6 @@ sudo apt-get install -y httping
 sudo apt-get install -y jq
 
 # the username needs to be changed
-sudo usermod -aG docker lngo
+while IFS= read -r line; do
+  sudo usermod -aG docker $line
+done < <( ls -l /users | grep 4096 | cut -d' ' -f3 )
