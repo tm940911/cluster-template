@@ -10,7 +10,6 @@ pc = portal.Context()
 # Create a Request object to start building the RSpec.
 request = pc.makeRequestRSpec()
 
-
 tourDescription = \
 """
 This profile provides the template for a compute node with Docker installed on Ubuntu 18.04
@@ -27,15 +26,14 @@ prefixForIP = "192.168.1."
 
 link = request.LAN("lan")
 
-for i in range(5):
+for i in range(3):
   if i == 0:
     node = request.XenVM("head")
   else:
     node = request.XenVM("worker-" + str(i))
-  node.cores = 4
-  node.ram = 4096
-  node.routable_control_ip = "true"
- 
+  node.cores = 8
+  node.ram = 8192
+  node.routable_control_ip = "true" 
   node.disk_image = "urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU18-64-STD"
   
   iface = node.addInterface("if" + str(i))
@@ -43,7 +41,6 @@ for i in range(5):
   iface.addAddress(pg.IPv4Address(prefixForIP + str(i + 1), "255.255.255.0"))
   link.addInterface(iface)
   
-  node.addService(pg.Execute(shell="sh", command="sudo bash /local/repository/passwordless.sh"))
   node.addService(pg.Execute(shell="sh", command="sudo bash /local/repository/install_docker.sh"))
   
 # Print the RSpec to the enclosing page.
